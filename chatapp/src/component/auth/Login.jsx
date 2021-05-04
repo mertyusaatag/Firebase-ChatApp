@@ -26,8 +26,7 @@ const Login = () => {
                            </Form.Input>,
                            <Form.Input fluid icon="lock" iconPosition="left" name="password" placeholder="Password" type="password">   
                            </Form.Input>
-                           <Form.Input fluid icon="lock" iconPosition="left" name="password" placeholder="Password" type="password">   
-                           </Form.Input>
+                           
 
                            <Button color="grey" fluid size="large">Giriş Yap</Button>
                        </Segment>
