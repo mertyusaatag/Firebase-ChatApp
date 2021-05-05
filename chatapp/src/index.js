@@ -10,7 +10,8 @@ import {
 import './index.css';
 import App from './App';
 import SignUp from "./component/auth/SignUp";
-import Login from './component/auth/Login';
+import firebase from "./firebase"
+import Login from './component/auth/Login'
 
 const Root = () => {
   return(<Router>

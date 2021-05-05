@@ -13,13 +13,13 @@
   background: #f2f3c1; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to right,
-    #00ff00	,
-    #860000
+    #3b3b44	,
+    #3b3b44
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
     to right,
-    #00ec2700	,
-    #ff0000
+    #3b3b44	,
+    #3b3b44
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   -webkit-background-clip: text;
@@ -27,5 +27,5 @@
 }
 
 .formHeader span {
-  -webkit-text-fill-color: #fff;
+  -webkit-text-fill-color: 3b3b44(44, 219, 250);
 }
