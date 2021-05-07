@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useRef,useEffect} from "react";
 import {
   Segment,
   Header,
@@ -13,6 +13,8 @@ import { useFirebase } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import {useFirebaseConnect,isLoaded,isEmpty} from "react-redux-firebase"
 import Message from "./Message";
+
+const {uuid} = require("uuidv4")
 
 
 
@@ -31,6 +33,52 @@ const ChatPanel = ({ currentChannel }) => {
   const firebase = useFirebase();
   const profile = useSelector((state) => state.firebase.profile);
   const currentUserUid = useSelector((state) => state.firebase.auth.uid);
+
+  const messageEndRef=useRef(null);
+  const fileInputRef = useRef(null);
+
+
+  useEffect(() => {
+    messageEndRef.current.scrollIntoView({
+      behaviour: "smooth",
+      block: "end",
+    });
+  });
+
+  const uploadMedia = (event) => {
+    const file =event.target.files[0];
+
+    if (file) {
+      const storageRef = firebase.storage().ref();
+      const fileRef = storageRef.child(`chat/public/${uuid()}.jpg`);
+      return fileRef
+        .put(file)
+        .then((snap) => {
+          fileRef.getDownloadURL().then((downloadURL) => {
+            sendMediaMessage(downloadURL);
+          });
+        })
+        .catch((err) => console.error("error uploading file", err));
+    }
+  };
+
+
+  const sendMediaMessage = url => {
+    const message = {
+      image : url,
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      user: {
+        id: currentUserUid,
+        name: profile.name,
+        avatar: profile.avatar,
+      
+      }
+  };
+  firebase.push(`messages/${currentChannel.key}`,message)
+  .then(()=>{
+    console.log("Media message sent")
+  });
+}
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -84,10 +132,15 @@ const ChatPanel = ({ currentChannel }) => {
             maxWidth: "100%",
           }}
         >
+          
           {channelMessages &&
             channelMessages.map(({ key, value }) => (
-              <Message key={key} message={value} />
+              <Message key={key} message={value} url={Message.url}></Message>
+              
+              
             ))}
+           
+            <div ref={messageEndRef}/>
         </Comment.Group>
       </Segment>
       {/* Send New Message */}
@@ -100,9 +153,19 @@ const ChatPanel = ({ currentChannel }) => {
           display: "flex",
         }}
       >
-        <Button icon>
+       <Button icon onClick={() => fileInputRef.current.click()}>
           <Icon name="add" />
+          <input
+            name="file"
+            type="file"
+            ref={fileInputRef}
+            onChange={uploadMedia}
+          />
         </Button>
+
+
+
+        
         <Form onSubmit={handleSubmit} style={{ flex: "1" }}>
           <Input
             fluid

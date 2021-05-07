@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
-import { Comment, Image } from "semantic-ui-react";
-import styles from "./message.module.css";
+import { Button, Comment, Image } from "semantic-ui-react";
+import styles from "./message.module.css"
 
 const isMedia = (message) => message.hasOwnProperty("image");
 
@@ -14,7 +14,8 @@ const Message = ({ message }) => (
       <Comment.Metadata>{timeFromNow(message.timestamp)}</Comment.Metadata>
 
       {isMedia(message) ? (
-        <Image src={message.image} className={styles.image} />
+        <Image  src={message.image} className={styles.image} >
+        </Image>
       ) : (
         <Comment.Text>{message.content}</Comment.Text>
       )}
