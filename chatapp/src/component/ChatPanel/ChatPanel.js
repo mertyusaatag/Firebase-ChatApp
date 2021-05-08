@@ -100,6 +100,26 @@ const ChatPanel = ({ currentChannel }) => {
       });
     }
   };
+
+  const filterMessages = () => {
+    const regex = new RegExp(searchTerm, "gi");
+
+    const searchResults = [...channelMessages].reduce((acc, message) => {
+      if (
+        (message.value.content && message.value.content.match(regex)) ||
+        message.value.user.name.match(regex)
+      ) {
+        acc.push(message);
+      }
+
+      return acc;
+    }, []);
+
+    return searchResults;
+  };
+
+  const renderedMessages =
+    searchTerm !== "" ? filterMessages() : channelMessages;
   return (
     <>
       <Segment clearing style={{ width: "99%" }}>
@@ -133,11 +153,9 @@ const ChatPanel = ({ currentChannel }) => {
           }}
         >
           
-          {channelMessages &&
-            channelMessages.map(({ key, value }) => (
-              <Message key={key} message={value} url={Message.url}></Message>
-              
-              
+          {renderedMessages &&
+            renderedMessages.map(({ key, value }) => (
+              <Message key={key} message={value} />
             ))}
            
             <div ref={messageEndRef}/>
